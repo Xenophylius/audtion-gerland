@@ -19,6 +19,11 @@ module.exports = {
         24: "96px"
       },
       colors: {
+        primary: {
+          100: "#97DFE6",
+          200: "#DCF7FA",
+          300: "#31C5D2",
+        },
         cyan: {
           500: "#46b6bf",
           700: "#0f929a",
