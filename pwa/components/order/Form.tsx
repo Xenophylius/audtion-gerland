@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ErrorMessage, Formik } from "formik";
@@ -7,6 +7,8 @@ import { useMutation, useQuery } from "react-query";
 import { getAllInsurances } from "../../services/insurance";
 import { fetch, FetchError, FetchResponse } from "../../utils/dataAccess";
 import { Order } from "../../types/Order";
+import { getAllCenters } from "../../services/center";
+import { Center } from "../../types/Center";
 
 
 interface Props {
@@ -34,8 +36,20 @@ export const Form: FunctionComponent<Props> = ({ order }) => {
   const [, setError] = useState<string | null>(null);
   const router = useRouter();
 
+  const [centers, setCenters] = useState<Center[]>([]);
+
+  useEffect(() => {
+    const fetchCenters = async () => {
+      const allCenters = await getAllCenters();
+      setCenters(allCenters);
+    };
+
+    fetchCenters();
+  }, []);
+
 
   const { data: insurances, isLoading } = useQuery('insurances', getAllInsurances);
+
 
 
   const saveMutation = useMutation<
@@ -289,14 +303,12 @@ export const Form: FunctionComponent<Props> = ({ order }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="order_id_center_pec"
               >
-                id_center_pec
+                Centre PEC
               </label>
-              <input
+              <select
                 name="id_center_pec"
                 id="order_id_center_pec"
                 value={values.id_center_pec ?? ""}
-                type="text"
-                placeholder=""
                 className={`mt-1 block w-full ${
                   errors.id_center_pec && touched.id_center_pec
                     ? "border-red-500"
@@ -309,7 +321,14 @@ export const Form: FunctionComponent<Props> = ({ order }) => {
                 }
                 onChange={handleChange}
                 onBlur={handleBlur}
-              />
+              >
+                <option value="">Sélectionnez un centre de PEC</option>
+                {centers.map((center) => (
+                  <option key={center["@id"]} value={center["@id"]}>
+                    {center.name}
+                  </option>
+                ))}
+              </select>
               <ErrorMessage
                 className="text-xs text-red-500 pt-1"
                 component="div"
