@@ -59,8 +59,6 @@ export const Form: FunctionComponent<Props> = ({ user, currentUserRoles }) => {
     deleteMutation.mutate({ id: user["@id"] });
   };
 
-  const isAdmin = currentUserRoles.includes("ROLE_ADMIN");
-
   return (
     <div className="container mx-auto px-4 max-w-2xl mt-4">
       <Link
@@ -152,45 +150,6 @@ export const Form: FunctionComponent<Props> = ({ user, currentUserRoles }) => {
                 name="email"
               />
             </div>
-            {isAdmin && (
-              <div className="mb-2">
-                <label
-                  className="text-gray-700 block text-sm font-bold"
-                  htmlFor="user_roles"
-                >
-                  Rôle
-                </label>
-                <div role="group" aria-labelledby="user_roles">
-                  <label>
-                    <input
-                      type="radio"
-                      name="roles"
-                      value="ROLE_USER"
-                      checked={values.roles.includes("ROLE_USER")}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                    Utilisateur
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="roles"
-                      value="ROLE_ADMIN"
-                      checked={values.roles.includes("ROLE_ADMIN")}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                    Admin
-                  </label>
-                </div>
-                <ErrorMessage
-                  className="text-xs text-red-500 pt-1"
-                  component="div"
-                  name="roles"
-                />
-              </div>
-            )}
             <div className="mb-2">
               <label
                 className="text-gray-700 block text-sm font-bold"

@@ -48,9 +48,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'id_user', targetEntity: Customer::class)]
     private Collection $customers;
 
+    /**
+     * @var Collection<int, Order>
+     */
+    #[ORM\OneToMany(mappedBy: 'id_name_audio', targetEntity: Order::class)]
+    private Collection $orders;
+
     public function __construct()
     {
         $this->customers = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -176,6 +183,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($customer->getIdUser() === $this) {
                 $customer->setIdUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): static
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setIdNameAudio($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): static
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getIdNameAudio() === $this) {
+                $order->setIdNameAudio(null);
             }
         }
 

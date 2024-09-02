@@ -16,7 +16,7 @@ const NavbarSide = () => {
                       
                 </div>
                 <div class="flex flex-col pt-1">
-                    <span class="text-lg font-bold leading-5 text-black">Acceuil</span>
+                    <span class="text-lg text-black font-bold leading-5 pt-1">Acceuil</span>
                     
                 </div>
             </a>

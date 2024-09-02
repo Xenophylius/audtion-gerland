@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CustomerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -36,6 +38,24 @@ class Customer
 
     #[ORM\ManyToOne(inversedBy: 'customers')]
     private ?Center $id_center = null;
+
+    /**
+     * @var Collection<int, Order>
+     */
+    #[ORM\OneToMany(mappedBy: 'id_customer', targetEntity: Order::class)]
+    private Collection $id_name_audio;
+
+    /**
+     * @var Collection<int, Order>
+     */
+    #[ORM\OneToMany(mappedBy: 'id_customer', targetEntity: Order::class)]
+    private Collection $orders;
+
+    public function __construct()
+    {
+        $this->id_name_audio = new ArrayCollection();
+        $this->orders = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -122,6 +142,66 @@ class Customer
     public function setIdCenter(?Center $id_center): static
     {
         $this->id_center = $id_center;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getIdNameAudio(): Collection
+    {
+        return $this->id_name_audio;
+    }
+
+    public function addIdNameAudio(Order $idNameAudio): static
+    {
+        if (!$this->id_name_audio->contains($idNameAudio)) {
+            $this->id_name_audio->add($idNameAudio);
+            $idNameAudio->setIdCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdNameAudio(Order $idNameAudio): static
+    {
+        if ($this->id_name_audio->removeElement($idNameAudio)) {
+            // set the owning side to null (unless already changed)
+            if ($idNameAudio->getIdCustomer() === $this) {
+                $idNameAudio->setIdCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): static
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setIdCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): static
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getIdCustomer() === $this) {
+                $order->setIdCustomer(null);
+            }
+        }
 
         return $this;
     }
