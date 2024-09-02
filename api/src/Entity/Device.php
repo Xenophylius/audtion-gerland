@@ -29,15 +29,9 @@ class Device
     #[ORM\Column]
     private ?float $price_ttc = null;
 
-    /**
-     * @var Collection<int, Order>
-     */
-    #[ORM\ManyToMany(targetEntity: Order::class, mappedBy: 'id_device')]
-    private Collection $orders;
-
     public function __construct()
     {
-        $this->orders = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -89,33 +83,6 @@ class Device
     public function setPriceTtc(float $price_ttc): static
     {
         $this->price_ttc = $price_ttc;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Order>
-     */
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function addOrder(Order $order): static
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders->add($order);
-            $order->addIdDevice($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Order $order): static
-    {
-        if ($this->orders->removeElement($order)) {
-            $order->removeIdDevice($this);
-        }
 
         return $this;
     }

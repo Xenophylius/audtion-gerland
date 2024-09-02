@@ -1,50 +1,50 @@
 import { FunctionComponent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ErrorMessage, Formik } from "formik";
+import { ErrorMessage, Field, FieldArray, Formik } from "formik";
 import { useMutation } from "react-query";
 
 import { fetch, FetchError, FetchResponse } from "../../utils/dataAccess";
-import { Appareil } from "../../types/Appareil";
+import { Device } from "../../types/Device";
 
 interface Props {
-  appareil?: Appareil;
+  device?: Device;
 }
 
 interface SaveParams {
-  values: Appareil;
+  values: Device;
 }
 
 interface DeleteParams {
   id: string;
 }
 
-const saveAppareil = async ({ values }: SaveParams) =>
-  await fetch<Appareil>(!values["@id"] ? "/appareils" : values["@id"], {
+const saveDevice = async ({ values }: SaveParams) =>
+  await fetch<Device>(!values["@id"] ? "/devices" : values["@id"], {
     method: !values["@id"] ? "POST" : "PUT",
     body: JSON.stringify(values),
   });
 
-const deleteAppareil = async (id: string) =>
-  await fetch<Appareil>(id, { method: "DELETE" });
+const deleteDevice = async (id: string) =>
+  await fetch<Device>(id, { method: "DELETE" });
 
-export const Form: FunctionComponent<Props> = ({ appareil }) => {
+export const Form: FunctionComponent<Props> = ({ device }) => {
   const [, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const saveMutation = useMutation<
-    FetchResponse<Appareil> | undefined,
+    FetchResponse<Device> | undefined,
     Error | FetchError,
     SaveParams
-  >((saveParams) => saveAppareil(saveParams));
+  >((saveParams) => saveDevice(saveParams));
 
   const deleteMutation = useMutation<
-    FetchResponse<Appareil> | undefined,
+    FetchResponse<Device> | undefined,
     Error | FetchError,
     DeleteParams
-  >(({ id }) => deleteAppareil(id), {
+  >(({ id }) => deleteDevice(id), {
     onSuccess: () => {
-      router.push("/appareils");
+      router.push("/devices");
     },
     onError: (error) => {
       setError(`Error when deleting the resource: ${error}`);
@@ -53,29 +53,29 @@ export const Form: FunctionComponent<Props> = ({ appareil }) => {
   });
 
   const handleDelete = () => {
-    if (!appareil || !appareil["@id"]) return;
+    if (!device || !device["@id"]) return;
     if (!window.confirm("Are you sure you want to delete this item?")) return;
-    deleteMutation.mutate({ id: appareil["@id"] });
+    deleteMutation.mutate({ id: device["@id"] });
   };
 
   return (
     <div className="container mx-auto px-4 max-w-2xl mt-4">
       <Link
-        href="/appareils"
+        href="/devices"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
         {`< Back to list`}
       </Link>
       <h1 className="text-3xl my-2">
-        {appareil ? `Edit Appareil ${appareil["@id"]}` : `Create Appareil`}
+        {device ? `Edit Device ${device["@id"]}` : `Create Device`}
       </h1>
       <Formik
         initialValues={
-          appareil
+          device
             ? {
-                ...appareil,
+                ...device,
               }
-            : new Appareil()
+            : new Device()
         }
         validate={() => {
           const errors = {};
@@ -92,7 +92,7 @@ export const Form: FunctionComponent<Props> = ({ appareil }) => {
                   isValid: true,
                   msg: `Element ${isCreation ? "created" : "updated"}.`,
                 });
-                router.push("/appareils");
+                router.push("/devices");
               },
               onError: (error) => {
                 setStatus({
@@ -124,47 +124,47 @@ export const Form: FunctionComponent<Props> = ({ appareil }) => {
             <div className="mb-2">
               <label
                 className="text-gray-700 block text-sm font-bold"
-                htmlFor="appareil_nom"
+                htmlFor="device_name"
               >
-                nom
+                name
               </label>
               <input
-                name="nom"
-                id="appareil_nom"
-                value={values.nom ?? ""}
+                name="name"
+                id="device_name"
+                value={values.name ?? ""}
                 type="text"
                 placeholder=""
                 className={`mt-1 block w-full ${
-                  errors.nom && touched.nom ? "border-red-500" : ""
+                  errors.name && touched.name ? "border-red-500" : ""
                 }`}
-                aria-invalid={errors.nom && touched.nom ? "true" : undefined}
+                aria-invalid={errors.name && touched.name ? "true" : undefined}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
               <ErrorMessage
                 className="text-xs text-red-500 pt-1"
                 component="div"
-                name="nom"
+                name="name"
               />
             </div>
             <div className="mb-2">
               <label
                 className="text-gray-700 block text-sm font-bold"
-                htmlFor="appareil_marque"
+                htmlFor="device_company"
               >
-                marque
+                company
               </label>
               <input
-                name="marque"
-                id="appareil_marque"
-                value={values.marque ?? ""}
+                name="company"
+                id="device_company"
+                value={values.company ?? ""}
                 type="text"
                 placeholder=""
                 className={`mt-1 block w-full ${
-                  errors.marque && touched.marque ? "border-red-500" : ""
+                  errors.company && touched.company ? "border-red-500" : ""
                 }`}
                 aria-invalid={
-                  errors.marque && touched.marque ? "true" : undefined
+                  errors.company && touched.company ? "true" : undefined
                 }
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -172,36 +172,67 @@ export const Form: FunctionComponent<Props> = ({ appareil }) => {
               <ErrorMessage
                 className="text-xs text-red-500 pt-1"
                 component="div"
-                name="marque"
+                name="company"
               />
             </div>
             <div className="mb-2">
               <label
                 className="text-gray-700 block text-sm font-bold"
-                htmlFor="appareil_prix"
+                htmlFor="device_tva"
               >
-                prix
+                tva
               </label>
               <input
-                name="prix"
-                id="appareil_prix"
-                value={values.prix ?? ""}
+                name="tva"
+                id="device_tva"
+                value={values.tva ?? ""}
                 type="number"
                 step="0.1"
                 placeholder=""
                 className={`mt-1 block w-full ${
-                  errors.prix && touched.prix ? "border-red-500" : ""
+                  errors.tva && touched.tva ? "border-red-500" : ""
                 }`}
-                aria-invalid={errors.prix && touched.prix ? "true" : undefined}
+                aria-invalid={errors.tva && touched.tva ? "true" : undefined}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
               <ErrorMessage
                 className="text-xs text-red-500 pt-1"
                 component="div"
-                name="prix"
+                name="tva"
               />
             </div>
+            <div className="mb-2">
+              <label
+                className="text-gray-700 block text-sm font-bold"
+                htmlFor="device_price_ttc"
+              >
+                price_ttc
+              </label>
+              <input
+                name="price_ttc"
+                id="device_price_ttc"
+                value={values.price_ttc ?? ""}
+                type="number"
+                step="0.1"
+                placeholder=""
+                className={`mt-1 block w-full ${
+                  errors.price_ttc && touched.price_ttc ? "border-red-500" : ""
+                }`}
+                aria-invalid={
+                  errors.price_ttc && touched.price_ttc ? "true" : undefined
+                }
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+              <ErrorMessage
+                className="text-xs text-red-500 pt-1"
+                component="div"
+                name="price_ttc"
+              />
+            </div>
+            
+           
             {status && status.msg && (
               <div
                 className={`border px-4 py-3 my-4 rounded ${
@@ -225,7 +256,7 @@ export const Form: FunctionComponent<Props> = ({ appareil }) => {
         )}
       </Formik>
       <div className="flex space-x-2 mt-4 justify-end">
-        {appareil && (
+        {device && (
           <button
             className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-sm text-red-400 font-bold py-2 px-4 rounded"
             onClick={handleDelete}

@@ -9,8 +9,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource(mercure: true)]
+#[ApiResource(
+    mercure: true, 
+    normalizationContext: ['groups' => ['read']],
+)]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -19,11 +23,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read'])]
     private ?int $id = null;
 
+    #[Groups(['read'])]
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
+    #[Groups(['read'])]
     /**
      * @var list<string> The user roles
      */
@@ -36,9 +43,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[Groups(['read'])]
     #[ORM\Column(length: 255)]
     private ?string $firstname = null;
 
+    #[Groups(['read'])]
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
 
@@ -48,16 +57,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'id_user', targetEntity: Customer::class)]
     private Collection $customers;
 
-    /**
-     * @var Collection<int, Order>
-     */
-    #[ORM\OneToMany(mappedBy: 'id_name_audio', targetEntity: Order::class)]
-    private Collection $orders;
 
     public function __construct()
     {
         $this->customers = new ArrayCollection();
-        $this->orders = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -183,36 +187,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($customer->getIdUser() === $this) {
                 $customer->setIdUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Order>
-     */
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function addOrder(Order $order): static
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders->add($order);
-            $order->setIdNameAudio($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Order $order): static
-    {
-        if ($this->orders->removeElement($order)) {
-            // set the owning side to null (unless already changed)
-            if ($order->getIdNameAudio() === $this) {
-                $order->setIdNameAudio(null);
             }
         }
 

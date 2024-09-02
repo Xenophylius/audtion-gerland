@@ -5,46 +5,46 @@ import { ErrorMessage, Formik } from "formik";
 import { useMutation } from "react-query";
 
 import { fetch, FetchError, FetchResponse } from "../../utils/dataAccess";
-import { Greeting } from "../../types/Greeting";
+import { Paiement } from "../../types/Paiement";
 
 interface Props {
-  greeting?: Greeting;
+  paiement?: Paiement;
 }
 
 interface SaveParams {
-  values: Greeting;
+  values: Paiement;
 }
 
 interface DeleteParams {
   id: string;
 }
 
-const saveGreeting = async ({ values }: SaveParams) =>
-  await fetch<Greeting>(!values["@id"] ? "/greetings" : values["@id"], {
+const savePaiement = async ({ values }: SaveParams) =>
+  await fetch<Paiement>(!values["@id"] ? "/paiements" : values["@id"], {
     method: !values["@id"] ? "POST" : "PUT",
     body: JSON.stringify(values),
   });
 
-const deleteGreeting = async (id: string) =>
-  await fetch<Greeting>(id, { method: "DELETE" });
+const deletePaiement = async (id: string) =>
+  await fetch<Paiement>(id, { method: "DELETE" });
 
-export const Form: FunctionComponent<Props> = ({ greeting }) => {
+export const Form: FunctionComponent<Props> = ({ paiement }) => {
   const [, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const saveMutation = useMutation<
-    FetchResponse<Greeting> | undefined,
+    FetchResponse<Paiement> | undefined,
     Error | FetchError,
     SaveParams
-  >((saveParams) => saveGreeting(saveParams));
+  >((saveParams) => savePaiement(saveParams));
 
   const deleteMutation = useMutation<
-    FetchResponse<Greeting> | undefined,
+    FetchResponse<Paiement> | undefined,
     Error | FetchError,
     DeleteParams
-  >(({ id }) => deleteGreeting(id), {
+  >(({ id }) => deletePaiement(id), {
     onSuccess: () => {
-      router.push("/greetings");
+      router.push("/paiements");
     },
     onError: (error) => {
       setError(`Error when deleting the resource: ${error}`);
@@ -53,29 +53,29 @@ export const Form: FunctionComponent<Props> = ({ greeting }) => {
   });
 
   const handleDelete = () => {
-    if (!greeting || !greeting["@id"]) return;
+    if (!paiement || !paiement["@id"]) return;
     if (!window.confirm("Are you sure you want to delete this item?")) return;
-    deleteMutation.mutate({ id: greeting["@id"] });
+    deleteMutation.mutate({ id: paiement["@id"] });
   };
 
   return (
     <div className="container mx-auto px-4 max-w-2xl mt-4">
       <Link
-        href="/greetings"
+        href="/paiements"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
         {`< Back to list`}
       </Link>
       <h1 className="text-3xl my-2">
-        {greeting ? `Edit Greeting ${greeting["@id"]}` : `Create Greeting`}
+        {paiement ? `Edit Paiement ${paiement["@id"]}` : `Create Paiement`}
       </h1>
       <Formik
         initialValues={
-          greeting
+          paiement
             ? {
-                ...greeting,
+                ...paiement,
               }
-            : new Greeting()
+            : new Paiement()
         }
         validate={() => {
           const errors = {};
@@ -92,7 +92,7 @@ export const Form: FunctionComponent<Props> = ({ greeting }) => {
                   isValid: true,
                   msg: `Element ${isCreation ? "created" : "updated"}.`,
                 });
-                router.push("/greetings");
+                router.push("/paiements");
               },
               onError: (error) => {
                 setStatus({
@@ -124,28 +124,111 @@ export const Form: FunctionComponent<Props> = ({ greeting }) => {
             <div className="mb-2">
               <label
                 className="text-gray-700 block text-sm font-bold"
-                htmlFor="greeting_name"
+                htmlFor="paiement_RAC"
               >
-                name
+                RAC
               </label>
               <input
-                name="name"
-                id="greeting_name"
-                value={values.name ?? ""}
-                type="text"
+                name="RAC"
+                id="paiement_RAC"
+                value={values.RAC ?? ""}
+                type="number"
+                step="0.1"
                 placeholder=""
-                required={true}
                 className={`mt-1 block w-full ${
-                  errors.name && touched.name ? "border-red-500" : ""
+                  errors.RAC && touched.RAC ? "border-red-500" : ""
                 }`}
-                aria-invalid={errors.name && touched.name ? "true" : undefined}
+                aria-invalid={errors.RAC && touched.RAC ? "true" : undefined}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
               <ErrorMessage
                 className="text-xs text-red-500 pt-1"
                 component="div"
-                name="name"
+                name="RAC"
+              />
+            </div>
+            <div className="mb-2">
+              <label
+                className="text-gray-700 block text-sm font-bold"
+                htmlFor="paiement_RO"
+              >
+                RO
+              </label>
+              <input
+                name="RO"
+                id="paiement_RO"
+                value={values.RO ?? ""}
+                type="number"
+                step="0.1"
+                placeholder=""
+                className={`mt-1 block w-full ${
+                  errors.RO && touched.RO ? "border-red-500" : ""
+                }`}
+                aria-invalid={errors.RO && touched.RO ? "true" : undefined}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+              <ErrorMessage
+                className="text-xs text-red-500 pt-1"
+                component="div"
+                name="RO"
+              />
+            </div>
+            <div className="mb-2">
+              <label
+                className="text-gray-700 block text-sm font-bold"
+                htmlFor="paiement_RC"
+              >
+                RC
+              </label>
+              <input
+                name="RC"
+                id="paiement_RC"
+                value={values.RC ?? ""}
+                type="number"
+                step="0.1"
+                placeholder=""
+                className={`mt-1 block w-full ${
+                  errors.RC && touched.RC ? "border-red-500" : ""
+                }`}
+                aria-invalid={errors.RC && touched.RC ? "true" : undefined}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+              <ErrorMessage
+                className="text-xs text-red-500 pt-1"
+                component="div"
+                name="RC"
+              />
+            </div>
+            <div className="mb-2">
+              <label
+                className="text-gray-700 block text-sm font-bold"
+                htmlFor="paiement_credit"
+              >
+                credit
+              </label>
+              <input
+                name="credit"
+                id="paiement_credit"
+                value={values.credit ?? ""}
+                type="number"
+                step="0.1"
+                placeholder=""
+                className={`mt-1 block w-full ${
+                  errors.credit && touched.credit ? "border-red-500" : ""
+                }`}
+                aria-invalid={
+                  errors.credit && touched.credit ? "true" : undefined
+                }
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+              <ErrorMessage
+                className="text-xs text-red-500 pt-1"
+                component="div"
+                name="credit"
               />
             </div>
             {status && status.msg && (
@@ -171,7 +254,7 @@ export const Form: FunctionComponent<Props> = ({ greeting }) => {
         )}
       </Formik>
       <div className="flex space-x-2 mt-4 justify-end">
-        {greeting && (
+        {paiement && (
           <button
             className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-sm text-red-400 font-bold py-2 px-4 rounded"
             onClick={handleDelete}

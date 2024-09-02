@@ -8,53 +8,52 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read']],
+)]
 class Customer
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read'])]
     private ?int $id = null;
 
+    #[Groups(['read'])]
     #[ORM\Column(length: 255)]
     private ?string $firstname = null;
 
+    #[Groups(['read'])]
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
 
+    #[Groups(['read'])]
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $birth = null;
 
+    #[Groups(['read'])]
     #[ORM\Column(length: 255)]
     private ?string $sex = null;
 
+    #[Groups(['read'])]
     #[ORM\Column(length: 255)]
     private ?string $city = null;
 
+    #[Groups(['read'])]
     #[ORM\ManyToOne(inversedBy: 'customers')]
     private ?User $id_user = null;
 
+    #[Groups(['read'])]
     #[ORM\ManyToOne(inversedBy: 'customers')]
     private ?Center $id_center = null;
 
-    /**
-     * @var Collection<int, Order>
-     */
-    #[ORM\OneToMany(mappedBy: 'id_customer', targetEntity: Order::class)]
-    private Collection $id_name_audio;
-
-    /**
-     * @var Collection<int, Order>
-     */
-    #[ORM\OneToMany(mappedBy: 'id_customer', targetEntity: Order::class)]
-    private Collection $orders;
 
     public function __construct()
     {
-        $this->id_name_audio = new ArrayCollection();
-        $this->orders = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -142,66 +141,6 @@ class Customer
     public function setIdCenter(?Center $id_center): static
     {
         $this->id_center = $id_center;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Order>
-     */
-    public function getIdNameAudio(): Collection
-    {
-        return $this->id_name_audio;
-    }
-
-    public function addIdNameAudio(Order $idNameAudio): static
-    {
-        if (!$this->id_name_audio->contains($idNameAudio)) {
-            $this->id_name_audio->add($idNameAudio);
-            $idNameAudio->setIdCustomer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIdNameAudio(Order $idNameAudio): static
-    {
-        if ($this->id_name_audio->removeElement($idNameAudio)) {
-            // set the owning side to null (unless already changed)
-            if ($idNameAudio->getIdCustomer() === $this) {
-                $idNameAudio->setIdCustomer(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Order>
-     */
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function addOrder(Order $order): static
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders->add($order);
-            $order->setIdCustomer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Order $order): static
-    {
-        if ($this->orders->removeElement($order)) {
-            // set the owning side to null (unless already changed)
-            if ($order->getIdCustomer() === $this) {
-                $order->setIdCustomer(null);
-            }
-        }
 
         return $this;
     }

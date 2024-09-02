@@ -6,26 +6,26 @@ import { useQuery } from "react-query";
 import Pagination from "../common/Pagination";
 import { List } from "./List";
 import { PagedCollection } from "../../types/collection";
-import { Greeting } from "../../types/Greeting";
+import { Insurance } from "../../types/Insurance";
 import { fetch, FetchResponse, parsePage } from "../../utils/dataAccess";
 import { useMercure } from "../../utils/mercure";
 
-export const getGreetingsPath = (page?: string | string[] | undefined) =>
-  `/greetings${typeof page === "string" ? `?page=${page}` : ""}`;
-export const getGreetings =
+export const getInsurancesPath = (page?: string | string[] | undefined) =>
+  `/insurances${typeof page === "string" ? `?page=${page}` : ""}`;
+export const getInsurances =
   (page?: string | string[] | undefined) => async () =>
-    await fetch<PagedCollection<Greeting>>(getGreetingsPath(page));
+    await fetch<PagedCollection<Insurance>>(getInsurancesPath(page));
 const getPagePath = (path: string) =>
-  `/greetings/page/${parsePage("greetings", path)}`;
+  `/insurances/page/${parsePage("insurances", path)}`;
 
 export const PageList: NextComponentType<NextPageContext> = () => {
   const {
     query: { page },
   } = useRouter();
-  const { data: { data: greetings, hubURL } = { hubURL: null } } = useQuery<
-    FetchResponse<PagedCollection<Greeting>> | undefined
-  >(getGreetingsPath(page), getGreetings(page));
-  const collection = useMercure(greetings, hubURL);
+  const { data: { data: insurances, hubURL } = { hubURL: null } } = useQuery<
+    FetchResponse<PagedCollection<Insurance>> | undefined
+  >(getInsurancesPath(page), getInsurances(page));
+  const collection = useMercure(insurances, hubURL);
 
   if (!collection || !collection["hydra:member"]) return null;
 
@@ -33,10 +33,10 @@ export const PageList: NextComponentType<NextPageContext> = () => {
     <div>
       <div>
         <Head>
-          <title>Greeting</title>
+          <title>Insurance List</title>
         </Head>
       </div>
-      <List greetings={collection["hydra:member"]} />
+      <List insurances={collection["hydra:member"]} />
       <Pagination collection={collection} getPagePath={getPagePath} />
     </div>
   );

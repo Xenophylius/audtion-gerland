@@ -7,31 +7,41 @@ use App\Repository\CenterRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CenterRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read']],
+)]
 class Center
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read'])]
     private ?int $id = null;
 
+    #[Groups(['read'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[Groups(['read'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $address = null;
 
+    #[Groups(['read'])]
     #[ORM\Column(length: 255)]
     private ?string $city = null;
 
+    #[Groups(['read'])]
     #[ORM\Column]
     private ?int $postal_code = null;
 
+    #[Groups(['read'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
+    #[Groups(['read'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $mail = null;
 
@@ -41,16 +51,11 @@ class Center
     #[ORM\OneToMany(mappedBy: 'id_center', targetEntity: Customer::class)]
     private Collection $customers;
 
-    /**
-     * @var Collection<int, Order>
-     */
-    #[ORM\OneToMany(mappedBy: 'id_center_pec', targetEntity: Order::class)]
-    private Collection $orders;
+
 
     public function __construct()
     {
         $this->customers = new ArrayCollection();
-        $this->orders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -160,33 +165,4 @@ class Center
         return $this;
     }
 
-    /**
-     * @return Collection<int, Order>
-     */
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function addOrder(Order $order): static
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders->add($order);
-            $order->setIdCenterPec($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Order $order): static
-    {
-        if ($this->orders->removeElement($order)) {
-            // set the owning side to null (unless already changed)
-            if ($order->getIdCenterPec() === $this) {
-                $order->setIdCenterPec(null);
-            }
-        }
-
-        return $this;
-    }
 }

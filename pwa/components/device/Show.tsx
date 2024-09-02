@@ -3,25 +3,26 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
+import ReferenceLinks from "../common/ReferenceLinks";
 import { fetch, getItemPath } from "../../utils/dataAccess";
-import { Greeting } from "../../types/Greeting";
+import { Device } from "../../types/Device";
 
 interface Props {
-  greeting: Greeting;
+  device: Device;
   text: string;
 }
 
-export const Show: FunctionComponent<Props> = ({ greeting, text }) => {
+export const Show: FunctionComponent<Props> = ({ device, text }) => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleDelete = async () => {
-    if (!greeting["@id"]) return;
+    if (!device["@id"]) return;
     if (!window.confirm("Are you sure you want to delete this item?")) return;
 
     try {
-      await fetch(greeting["@id"], { method: "DELETE" });
-      router.push("/greetings");
+      await fetch(device["@id"], { method: "DELETE" });
+      router.push("/devices");
     } catch (error) {
       setError("Error when deleting the resource.");
       console.error(error);
@@ -31,19 +32,19 @@ export const Show: FunctionComponent<Props> = ({ greeting, text }) => {
   return (
     <div className="p-4">
       <Head>
-        <title>{`Show Greeting ${greeting["@id"]}`}</title>
+        <title>{`Show Device ${device["@id"]}`}</title>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: text }}
         />
       </Head>
       <Link
-        href="/greetings"
+        href="/devices"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
         {"< Back to list"}
       </Link>
-      <h1 className="text-3xl mb-2">{`Show Greeting ${greeting["@id"]}`}</h1>
+      <h1 className="text-3xl mb-2">{`Show Device ${device["@id"]}`}</h1>
       <table
         cellPadding={10}
         className="shadow-md table border-collapse min-w-full leading-normal table-auto text-left my-3"
@@ -57,7 +58,34 @@ export const Show: FunctionComponent<Props> = ({ greeting, text }) => {
         <tbody className="text-sm divide-y divide-gray-200">
           <tr>
             <th scope="row">name</th>
-            <td>{greeting["name"]}</td>
+            <td>{device["name"]}</td>
+          </tr>
+          <tr>
+            <th scope="row">company</th>
+            <td>{device["company"]}</td>
+          </tr>
+          <tr>
+            <th scope="row">tva</th>
+            <td>{device["tva"]}</td>
+          </tr>
+          <tr>
+            <th scope="row">price_ttc</th>
+            <td>{device["price_ttc"]}</td>
+          </tr>
+          <tr>
+            <th scope="row">orders</th>
+            <td>
+              <ReferenceLinks
+                items={device["orders"].map((ref: any) => ({
+                  href: getItemPath(ref, "/orders/[id]"),
+                  name: ref,
+                }))}
+              />
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">priceTtc</th>
+            <td>{device["priceTtc"]}</td>
           </tr>
         </tbody>
       </table>
@@ -71,7 +99,7 @@ export const Show: FunctionComponent<Props> = ({ greeting, text }) => {
       )}
       <div className="flex space-x-2 mt-4 items-center justify-end">
         <Link
-          href={getItemPath(greeting["@id"], "/greetings/[id]/edit")}
+          href={getItemPath(device["@id"], "/devices/[id]/edit")}
           className="inline-block mt-2 border-2 border-cyan-500 bg-cyan-500 hover:border-cyan-700 hover:bg-cyan-700 text-xs text-white font-bold py-2 px-4 rounded"
         >
           Edit

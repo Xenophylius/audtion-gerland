@@ -3,18 +3,18 @@ import Link from "next/link";
 
 import ReferenceLinks from "../common/ReferenceLinks";
 import { getItemPath } from "../../utils/dataAccess";
-import { Appareil } from "../../types/Appareil";
+import { Device } from "../../types/Device";
 
 interface Props {
-  appareils: Appareil[];
+  devices: Device[];
 }
 
-export const List: FunctionComponent<Props> = ({ appareils }) => (
+export const List: FunctionComponent<Props> = ({ devices }) => (
   <div className="p-4">
     <div className="flex justify-between items-center">
-      <h1 className="text-3xl mb-2">Appareil List</h1>
+      <h1 className="text-3xl mb-2">Device List</h1>
       <Link
-        href="/appareils/create"
+        href="/devices/create"
         className="bg-cyan-500 hover:bg-cyan-700 text-white text-sm font-bold py-2 px-4 rounded"
       >
         Create
@@ -27,33 +27,41 @@ export const List: FunctionComponent<Props> = ({ appareils }) => (
       <thead className="w-full text-xs uppercase font-light text-gray-700 bg-gray-200 py-2 px-4">
         <tr>
           <th>id</th>
-          <th>nom</th>
-          <th>marque</th>
-          <th>prix</th>
+          <th>name</th>
+          <th>company</th>
+          <th>tva</th>
+          <th>price_ttc</th>
+          <th>orders</th>
+          <th>priceTtc</th>
           <th colSpan={2} />
         </tr>
       </thead>
       <tbody className="text-sm divide-y divide-gray-200">
-        {appareils &&
-          appareils.length !== 0 &&
-          appareils.map(
-            (appareil) =>
-              appareil["@id"] && (
-                <tr className="py-2" key={appareil["@id"]}>
+        {devices &&
+          devices.length !== 0 &&
+          devices.map(
+            (device) =>
+              device["@id"] && (
+                <tr className="py-2" key={device["@id"]}>
                   <th scope="row">
                     <ReferenceLinks
                       items={{
-                        href: getItemPath(appareil["@id"], "/appareils/[id]"),
-                        name: appareil["@id"],
+                        href: getItemPath(device["@id"], "/devices/[id]"),
+                        name: device["@id"],
                       }}
                     />
                   </th>
-                  <td>{appareil["nom"]}</td>
-                  <td>{appareil["marque"]}</td>
-                  <td>{appareil["prix"]}</td>
+                  <td>{device["name"]}</td>
+                  <td>{device["company"]}</td>
+                  <td>{device["tva"]}</td>
+                  <td>{device["price_ttc"]}</td>
+                  <td>
+                  
+                  </td>
+                  <td>{device["priceTtc"]}</td>
                   <td className="w-8">
                     <Link
-                      href={getItemPath(appareil["@id"], "/appareils/[id]")}
+                      href={getItemPath(device["@id"], "/devices/[id]")}
                       className="text-cyan-500"
                     >
                       Show
@@ -74,10 +82,7 @@ export const List: FunctionComponent<Props> = ({ appareils }) => (
                   </td>
                   <td className="w-8">
                     <Link
-                      href={getItemPath(
-                        appareil["@id"],
-                        "/appareils/[id]/edit"
-                      )}
+                      href={getItemPath(device["@id"], "/devices/[id]/edit")}
                       className="text-cyan-500"
                     >
                       Edit

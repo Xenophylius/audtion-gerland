@@ -3,21 +3,21 @@ import Link from "next/link";
 
 import ReferenceLinks from "../common/ReferenceLinks";
 import { getItemPath } from "../../utils/dataAccess";
-import { Greeting } from "../../types/Greeting";
+import { Paiement } from "../../types/Paiement";
 
 interface Props {
-  greetings: Greeting[];
+  paiements: Paiement[];
 }
 
-export const List: FunctionComponent<Props> = ({ greetings }) => (
+export const List: FunctionComponent<Props> = ({ paiements }) => (
   <div className="p-4">
     <div className="flex justify-between items-center">
-      <h1 className="text-3xl mb-2">Greeting</h1>
+      <h1 className="text-3xl mb-2">Paiement List</h1>
       <Link
-        href="/greetings/create"
+        href="/paiements/create"
         className="bg-cyan-500 hover:bg-cyan-700 text-white text-sm font-bold py-2 px-4 rounded"
       >
-        Nouveau Patient
+        Create
       </Link>
     </div>
     <table
@@ -26,25 +26,39 @@ export const List: FunctionComponent<Props> = ({ greetings }) => (
     >
       <thead className="w-full text-xs uppercase font-light text-gray-700 bg-gray-200 py-2 px-4">
         <tr>
-          <th>Nom</th>
-          <th>Change</th>
+          <th>id</th>
+          <th>RAC</th>
+          <th>RO</th>
+          <th>RC</th>
+          <th>credit</th>
           <th colSpan={2} />
         </tr>
       </thead>
       <tbody className="text-sm divide-y divide-gray-200">
-        {greetings &&
-          greetings.length !== 0 &&
-          greetings.map(
-            (greeting) =>
-              greeting["@id"] && (
-                <tr className="py-2" key={greeting["@id"]}>
-                  <td>{greeting["name"]}</td>
+        {paiements &&
+          paiements.length !== 0 &&
+          paiements.map(
+            (paiement) =>
+              paiement["@id"] && (
+                <tr className="py-2" key={paiement["@id"]}>
+                  <th scope="row">
+                    <ReferenceLinks
+                      items={{
+                        href: getItemPath(paiement["@id"], "/paiements/[id]"),
+                        name: paiement["@id"],
+                      }}
+                    />
+                  </th>
+                  <td>{paiement["RAC"]}</td>
+                  <td>{paiement["RO"]}</td>
+                  <td>{paiement["RC"]}</td>
+                  <td>{paiement["credit"]}</td>
                   <td className="w-8">
                     <Link
-                      href={getItemPath(greeting["@id"], "/greetings/[id]")}
+                      href={getItemPath(paiement["@id"], "/paiements/[id]")}
                       className="text-cyan-500"
                     >
-                      Voir
+                      Show
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -63,10 +77,10 @@ export const List: FunctionComponent<Props> = ({ greetings }) => (
                   <td className="w-8">
                     <Link
                       href={getItemPath(
-                        greeting["@id"],
-                        "/greetings/[id]/edit"
+                        paiement["@id"],
+                        "/paiements/[id]/edit"
                       )}
-                      className="text-cyan-500 hover:text-cyan-700"
+                      className="text-cyan-500"
                     >
                       Edit
                       <svg

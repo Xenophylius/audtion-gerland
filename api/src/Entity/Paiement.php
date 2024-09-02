@@ -5,30 +5,36 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PaiementRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PaiementRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read']],
+    denormalizationContext: ['groups' => ['write']],
+)]
 class Paiement
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read'])]
     private ?int $id = null;
 
+    #[Groups(['read', 'write'])]
     #[ORM\Column(nullable: true)]
     private ?float $RAC = null;
 
+    #[Groups(['read', 'write'])]
     #[ORM\Column(nullable: true)]
     private ?float $RO = null;
 
+    #[Groups(['read', 'write'])]
     #[ORM\Column(nullable: true)]
     private ?float $RC = null;
 
+    #[Groups(['read', 'write'])]
     #[ORM\Column(nullable: true)]
     private ?float $credit = null;
-
-    #[ORM\OneToOne(mappedBy: 'id_paiement', cascade: ['persist', 'remove'])]
-    private ?Order $orders = null;
 
     public function getId(): ?int
     {
@@ -79,23 +85,6 @@ class Paiement
     public function setCredit(?float $credit): static
     {
         $this->credit = $credit;
-
-        return $this;
-    }
-
-    public function getOrders(): ?Order
-    {
-        return $this->orders;
-    }
-
-    public function setOrders(Order $orders): static
-    {
-        // set the owning side of the relation if necessary
-        if ($orders->getIdPaiement() !== $this) {
-            $orders->setIdPaiement($this);
-        }
-
-        $this->orders = $orders;
 
         return $this;
     }

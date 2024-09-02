@@ -7,34 +7,33 @@ use App\Repository\InsuranceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: InsuranceRepository::class)]
-#[ApiResource]
+#[ApiResource( normalizationContext: ['groups' => ['read']],)]
 class Insurance
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read'])]
     private ?int $id = null;
 
+    #[Groups(['read'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[Groups(['read'])]
     #[ORM\Column]
     private ?float $price_ttc = null;
 
+    #[Groups(['read'])]
     #[ORM\Column]
     private ?float $tva = null;
 
-    /**
-     * @var Collection<int, Order>
-     */
-    #[ORM\OneToMany(mappedBy: 'id_insurance', targetEntity: Order::class)]
-    private Collection $orders;
-
     public function __construct()
     {
-        $this->orders = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -74,36 +73,6 @@ class Insurance
     public function setTva(float $tva): static
     {
         $this->tva = $tva;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Order>
-     */
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function addOrder(Order $order): static
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders->add($order);
-            $order->setIdInsurance($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Order $order): static
-    {
-        if ($this->orders->removeElement($order)) {
-            // set the owning side to null (unless already changed)
-            if ($order->getIdInsurance() === $this) {
-                $order->setIdInsurance(null);
-            }
-        }
 
         return $this;
     }

@@ -6,26 +6,26 @@ import { useQuery } from "react-query";
 import Pagination from "../common/Pagination";
 import { List } from "./List";
 import { PagedCollection } from "../../types/collection";
-import { Appareil } from "../../types/Appareil";
+import { Paiement } from "../../types/Paiement";
 import { fetch, FetchResponse, parsePage } from "../../utils/dataAccess";
 import { useMercure } from "../../utils/mercure";
 
-export const getAppareilsPath = (page?: string | string[] | undefined) =>
-  `/appareils${typeof page === "string" ? `?page=${page}` : ""}`;
-export const getAppareils =
+export const getPaiementsPath = (page?: string | string[] | undefined) =>
+  `/paiements${typeof page === "string" ? `?page=${page}` : ""}`;
+export const getPaiements =
   (page?: string | string[] | undefined) => async () =>
-    await fetch<PagedCollection<Appareil>>(getAppareilsPath(page));
+    await fetch<PagedCollection<Paiement>>(getPaiementsPath(page));
 const getPagePath = (path: string) =>
-  `/appareils/page/${parsePage("appareils", path)}`;
+  `/paiements/page/${parsePage("paiements", path)}`;
 
 export const PageList: NextComponentType<NextPageContext> = () => {
   const {
     query: { page },
   } = useRouter();
-  const { data: { data: appareils, hubURL } = { hubURL: null } } = useQuery<
-    FetchResponse<PagedCollection<Appareil>> | undefined
-  >(getAppareilsPath(page), getAppareils(page));
-  const collection = useMercure(appareils, hubURL);
+  const { data: { data: paiements, hubURL } = { hubURL: null } } = useQuery<
+    FetchResponse<PagedCollection<Paiement>> | undefined
+  >(getPaiementsPath(page), getPaiements(page));
+  const collection = useMercure(paiements, hubURL);
 
   if (!collection || !collection["hydra:member"]) return null;
 
@@ -33,10 +33,10 @@ export const PageList: NextComponentType<NextPageContext> = () => {
     <div>
       <div>
         <Head>
-          <title>Appareil List</title>
+          <title>Paiement List</title>
         </Head>
       </div>
-      <List appareils={collection["hydra:member"]} />
+      <List paiements={collection["hydra:member"]} />
       <Pagination collection={collection} getPagePath={getPagePath} />
     </div>
   );

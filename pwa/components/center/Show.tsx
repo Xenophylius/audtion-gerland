@@ -82,14 +82,6 @@ export const Show: FunctionComponent<Props> = ({ center, text }) => {
           </tr>
           <tr>
             <th scope="row">customers</th>
-            <td>
-              <ReferenceLinks
-                items={center["customers"].map((ref: any) => ({
-                  href: getItemPath(ref, "/customers/[id]"),
-                  name: ref,
-                }))}
-              />
-            </td>
           </tr>
           <tr>
             <th scope="row">postalCode</th>

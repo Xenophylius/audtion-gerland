@@ -12,7 +12,7 @@ interface Props {
 export const List: FunctionComponent<Props> = ({ customers }) => (
   <div className="p-4">
     <div className="flex justify-between items-center">
-      <h1 className="text-3xl mb-2">Customer List</h1>
+      <h1 className="text-3xl mb-2">Liste des patients</h1>
       <Link
         href="/customers/create"
         className="bg-cyan-500 hover:bg-cyan-700 text-white text-sm font-bold py-2 px-4 rounded"
@@ -34,8 +34,6 @@ export const List: FunctionComponent<Props> = ({ customers }) => (
           <th>city</th>
           <th>id_user</th>
           <th>id_center</th>
-          <th>idUser</th>
-          <th>idCenter</th>
           <th colSpan={2} />
         </tr>
       </thead>
@@ -62,8 +60,8 @@ export const List: FunctionComponent<Props> = ({ customers }) => (
                   <td>
                     <ReferenceLinks
                       items={{
-                        href: getItemPath(customer["id_user"], "/users/[id]"),
-                        name: customer["id_user"],
+                        href: getItemPath(customer.id_user["@id"], "/users/[id]"),
+                        name: customer.id_user["firstname"],
                       }}
                     />
                   </td>
@@ -71,32 +69,15 @@ export const List: FunctionComponent<Props> = ({ customers }) => (
                     <ReferenceLinks
                       items={{
                         href: getItemPath(
-                          customer["id_center"],
+                          customer.id_center["@id"],
                           "/centers/[id]"
                         ),
-                        name: customer["id_center"],
+                        name: customer.id_center["name"],
                       }}
                     />
                   </td>
-                  <td>
-                    <ReferenceLinks
-                      items={{
-                        href: getItemPath(customer["idUser"], "/users/[id]"),
-                        name: customer["idUser"],
-                      }}
-                    />
-                  </td>
-                  <td>
-                    <ReferenceLinks
-                      items={{
-                        href: getItemPath(
-                          customer["idCenter"],
-                          "/centers/[id]"
-                        ),
-                        name: customer["idCenter"],
-                      }}
-                    />
-                  </td>
+                  
+                  
                   <td className="w-8">
                     <Link
                       href={getItemPath(customer["@id"], "/customers/[id]")}

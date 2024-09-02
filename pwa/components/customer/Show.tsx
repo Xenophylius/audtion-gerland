@@ -81,8 +81,8 @@ export const Show: FunctionComponent<Props> = ({ customer, text }) => {
             <td>
               <ReferenceLinks
                 items={{
-                  href: getItemPath(customer["id_user"], "/users/[id]"),
-                  name: customer["id_user"],
+                  href: getItemPath(customer.id_user["@id"], "/users/[id]"),
+                  name: customer.id_user["firstname"],
                 }}
               />
             </td>
@@ -92,30 +92,8 @@ export const Show: FunctionComponent<Props> = ({ customer, text }) => {
             <td>
               <ReferenceLinks
                 items={{
-                  href: getItemPath(customer["id_center"], "/centers/[id]"),
-                  name: customer["id_center"],
-                }}
-              />
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">idUser</th>
-            <td>
-              <ReferenceLinks
-                items={{
-                  href: getItemPath(customer["idUser"], "/users/[id]"),
-                  name: customer["idUser"],
-                }}
-              />
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">idCenter</th>
-            <td>
-              <ReferenceLinks
-                items={{
-                  href: getItemPath(customer["idCenter"], "/centers/[id]"),
-                  name: customer["idCenter"],
+                  href: getItemPath(customer.id_center["@id"], "/centers/[id]"),
+                  name: customer.id_center["name"],
                 }}
               />
             </td>
