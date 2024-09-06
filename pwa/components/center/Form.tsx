@@ -90,7 +90,7 @@ export const Form: FunctionComponent<Props> = ({ center }) => {
               onSuccess: () => {
                 setStatus({
                   isValid: true,
-                  msg: `Centre ${isCreation ? "créé" : "mis à jour"}.`,
+                  msg: `Centre ${isCreation ? "créé" : "modifié"}.`,
                 });
                 router.push("/centers");
               },
@@ -302,7 +302,7 @@ export const Form: FunctionComponent<Props> = ({ center }) => {
               className="inline-block mt-2 bg-cyan-500 hover:bg-cyan-700 text-sm text-white font-bold py-2 px-4 rounded"
               disabled={isSubmitting}
             >
-              Modifier
+              Envoyer
             </button>
           </form>
         )}

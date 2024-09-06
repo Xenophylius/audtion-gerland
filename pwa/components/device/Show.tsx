@@ -18,13 +18,13 @@ export const Show: FunctionComponent<Props> = ({ device, text }) => {
 
   const handleDelete = async () => {
     if (!device["@id"]) return;
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+    if (!window.confirm("Êtes vous sur de vouloir supprimer cet équipement ?")) return;
 
     try {
       await fetch(device["@id"], { method: "DELETE" });
       router.push("/devices");
     } catch (error) {
-      setError("Error when deleting the resource.");
+      setError("Erreur lors de la suppression de l'équipement.");
       console.error(error);
     }
   };
@@ -32,7 +32,7 @@ export const Show: FunctionComponent<Props> = ({ device, text }) => {
   return (
     <div className="p-4">
       <Head>
-        <title>{`Show Device ${device["@id"]}`}</title>
+        <title>{`Fiche de ${device["name"]}`}</title>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: text }}
@@ -42,50 +42,35 @@ export const Show: FunctionComponent<Props> = ({ device, text }) => {
         href="/devices"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
-        {"< Back to list"}
+        {"< Retour à la liste des équipements"}
       </Link>
-      <h1 className="text-3xl mb-2">{`Show Device ${device["@id"]}`}</h1>
+      <h1 className="text-3xl mb-2">{`Fiche de ${device["name"]}`}</h1>
       <table
         cellPadding={10}
         className="shadow-md table border-collapse min-w-full leading-normal table-auto text-left my-3"
       >
         <thead className="w-full text-xs uppercase font-light text-gray-700 bg-gray-200 py-2 px-4">
           <tr>
-            <th>Field</th>
-            <th>Value</th>
+            <th>Champ</th>
+            <th>Valeur</th>
           </tr>
         </thead>
         <tbody className="text-sm divide-y divide-gray-200">
           <tr>
-            <th scope="row">name</th>
+            <th scope="row">Nom</th>
             <td>{device["name"]}</td>
           </tr>
           <tr>
-            <th scope="row">company</th>
+            <th scope="row">Constructeur</th>
             <td>{device["company"]}</td>
           </tr>
           <tr>
-            <th scope="row">tva</th>
+            <th scope="row">TVA</th>
             <td>{device["tva"]}</td>
           </tr>
           <tr>
-            <th scope="row">price_ttc</th>
+            <th scope="row">Prix TTC</th>
             <td>{device["price_ttc"]}</td>
-          </tr>
-          <tr>
-            <th scope="row">orders</th>
-            <td>
-              <ReferenceLinks
-                items={device["orders"].map((ref: any) => ({
-                  href: getItemPath(ref, "/orders/[id]"),
-                  name: ref,
-                }))}
-              />
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">priceTtc</th>
-            <td>{device["priceTtc"]}</td>
           </tr>
         </tbody>
       </table>
@@ -102,13 +87,13 @@ export const Show: FunctionComponent<Props> = ({ device, text }) => {
           href={getItemPath(device["@id"], "/devices/[id]/edit")}
           className="inline-block mt-2 border-2 border-cyan-500 bg-cyan-500 hover:border-cyan-700 hover:bg-cyan-700 text-xs text-white font-bold py-2 px-4 rounded"
         >
-          Edit
+          Modifier
         </Link>
         <button
           className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-xs text-red-400 font-bold py-2 px-4 rounded"
           onClick={handleDelete}
         >
-          Delete
+          Supprimer
         </button>
       </div>
     </div>

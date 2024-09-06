@@ -9,7 +9,8 @@ import { fetch, FetchError, FetchResponse } from "../../utils/dataAccess";
 import { Order } from "../../types/Order";
 import { getAllCenters } from "../../services/center";
 import { Center } from "../../types/Center";
-
+import { getAllUsers } from "../../services/user"; // Import de la fonction pour récupérer les utilisateurs
+import { User } from "../../types/User"; // Import du type User
 
 interface Props {
   order?: Order;
@@ -47,10 +48,15 @@ export const Form: FunctionComponent<Props> = ({ order }) => {
     fetchCenters();
   }, []);
 
+  const { data: insurances, isLoading: isLoadingInsurances } = useQuery(
+    "insurances",
+    getAllInsurances
+  );
 
-  const { data: insurances, isLoading } = useQuery('insurances', getAllInsurances);
-
-
+  const { data: users, isLoading: isLoadingUsers } = useQuery(
+    "users",
+    getAllUsers
+  );
 
   const saveMutation = useMutation<
     FetchResponse<Order> | undefined,
@@ -67,14 +73,14 @@ export const Form: FunctionComponent<Props> = ({ order }) => {
       router.push("/orders");
     },
     onError: (error) => {
-      setError(`Error when deleting the resource: ${error}`);
+      setError(`Erreur lors de la suppression de la ressource : ${error}`);
       console.error(error);
     },
   });
 
   const handleDelete = () => {
     if (!order || !order["@id"]) return;
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+    if (!window.confirm("Êtes vous sur de vouloir supprimer ?")) return;
     deleteMutation.mutate({ id: order["@id"] });
   };
 
@@ -84,10 +90,10 @@ export const Form: FunctionComponent<Props> = ({ order }) => {
         href="/orders"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
-        {`< Back to list`}
+        {`< retour à la liste des ventes`}
       </Link>
       <h1 className="text-3xl my-2">
-        {order ? `Edit Order ${order["@id"]}` : `Create Order`}
+        {order ? `Modifier la vente ${order["@id"]}` : `Créer une vente`}
       </h1>
       <Formik
         initialValues={
@@ -115,7 +121,7 @@ export const Form: FunctionComponent<Props> = ({ order }) => {
               onSuccess: () => {
                 setStatus({
                   isValid: true,
-                  msg: `Element ${isCreation ? "created" : "updated"}.`,
+                  msg: `Vente ${isCreation ? "crée" : "modifiée"}.`,
                 });
                 router.push("/orders");
               },
@@ -151,7 +157,7 @@ export const Form: FunctionComponent<Props> = ({ order }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="order_id_paiement"
               >
-                id_paiement
+                Paiement
               </label>
               <input
                 name="id_paiement"
@@ -181,7 +187,7 @@ export const Form: FunctionComponent<Props> = ({ order }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="order_id_customer"
               >
-                id_customer
+                Patient
               </label>
               <input
                 name="id_customer"
@@ -211,7 +217,7 @@ export const Form: FunctionComponent<Props> = ({ order }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="order_mutual"
               >
-                mutual
+                Mutuelle
               </label>
               <input
                 name="mutual"
@@ -239,14 +245,12 @@ export const Form: FunctionComponent<Props> = ({ order }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="order_id_name_audio"
               >
-                id_name_audio
+                Audioprothésiste
               </label>
-              <input
+              <select
                 name="id_name_audio"
                 id="order_id_name_audio"
                 value={values.id_name_audio ?? ""}
-                type="text"
-                placeholder=""
                 className={`mt-1 block w-full ${
                   errors.id_name_audio && touched.id_name_audio
                     ? "border-red-500"
@@ -259,7 +263,14 @@ export const Form: FunctionComponent<Props> = ({ order }) => {
                 }
                 onChange={handleChange}
                 onBlur={handleBlur}
-              />
+              >
+                <option value="">Sélectionnez un Audioprothésiste</option>
+                {users?.map((user) => (
+                  <option key={user["@id"]} value={user["@id"]}>
+                    {user.firstname}
+                  </option>
+                ))}
+              </select>
               <ErrorMessage
                 className="text-xs text-red-500 pt-1"
                 component="div"
@@ -352,7 +363,7 @@ export const Form: FunctionComponent<Props> = ({ order }) => {
               className="inline-block mt-2 bg-cyan-500 hover:bg-cyan-700 text-sm text-white font-bold py-2 px-4 rounded"
               disabled={isSubmitting}
             >
-              Submit
+              Envoyer
             </button>
           </form>
         )}
@@ -363,7 +374,7 @@ export const Form: FunctionComponent<Props> = ({ order }) => {
             className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-sm text-red-400 font-bold py-2 px-4 rounded"
             onClick={handleDelete}
           >
-            Delete
+            Supprimer
           </button>
         )}
       </div>

@@ -12,12 +12,12 @@ interface Props {
 export const List: FunctionComponent<Props> = ({ devices }) => (
   <div className="p-4">
     <div className="flex justify-between items-center">
-      <h1 className="text-3xl mb-2">Device List</h1>
+      <h1 className="text-3xl mb-2">Liste des équipements</h1>
       <Link
         href="/devices/create"
         className="bg-cyan-500 hover:bg-cyan-700 text-white text-sm font-bold py-2 px-4 rounded"
       >
-        Create
+        Créer
       </Link>
     </div>
     <table
@@ -27,12 +27,10 @@ export const List: FunctionComponent<Props> = ({ devices }) => (
       <thead className="w-full text-xs uppercase font-light text-gray-700 bg-gray-200 py-2 px-4">
         <tr>
           <th>id</th>
-          <th>name</th>
-          <th>company</th>
-          <th>tva</th>
-          <th>price_ttc</th>
-          <th>orders</th>
-          <th>priceTtc</th>
+          <th>Nom</th>
+          <th>Constructeur</th>
+          <th>TVA</th>
+          <th>Prix TTC</th>
           <th colSpan={2} />
         </tr>
       </thead>
@@ -55,16 +53,13 @@ export const List: FunctionComponent<Props> = ({ devices }) => (
                   <td>{device["company"]}</td>
                   <td>{device["tva"]}</td>
                   <td>{device["price_ttc"]}</td>
-                  <td>
                   
-                  </td>
-                  <td>{device["priceTtc"]}</td>
                   <td className="w-8">
                     <Link
                       href={getItemPath(device["@id"], "/devices/[id]")}
                       className="text-cyan-500"
                     >
-                      Show
+                      Voir
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -85,7 +80,7 @@ export const List: FunctionComponent<Props> = ({ devices }) => (
                       href={getItemPath(device["@id"], "/devices/[id]/edit")}
                       className="text-cyan-500"
                     >
-                      Edit
+                      Modifier
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"

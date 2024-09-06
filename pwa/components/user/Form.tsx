@@ -48,14 +48,14 @@ export const Form: FunctionComponent<Props> = ({ user, currentUserRoles }) => {
       router.push("/users");
     },
     onError: (error) => {
-      setError(`Error when deleting the resource: ${error}`);
+      setError(`Erreur lors de la suppression de l'utilisateur: ${error}`);
       console.error(error);
     },
   });
 
   const handleDelete = () => {
     if (!user || !user["@id"]) return;
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+    if (!window.confirm("Êtes vous sur de vouloir supprimer cet utilisateur ?")) return;
     deleteMutation.mutate({ id: user["@id"] });
   };
 
@@ -91,7 +91,7 @@ export const Form: FunctionComponent<Props> = ({ user, currentUserRoles }) => {
               onSuccess: () => {
                 setStatus({
                   isValid: true,
-                  msg: `Element ${isCreation ? "created" : "updated"}.`,
+                  msg: `Utilisateur ${isCreation ? "créé" : "modifié"}.`,
                 });
                 router.push("/users");
               },
@@ -127,7 +127,7 @@ export const Form: FunctionComponent<Props> = ({ user, currentUserRoles }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="user_email"
               >
-                E-mail
+                Mail
               </label>
               <input
                 name="email"
@@ -258,7 +258,7 @@ export const Form: FunctionComponent<Props> = ({ user, currentUserRoles }) => {
               className="inline-block mt-2 bg-cyan-500 hover:bg-cyan-700 text-sm text-white font-bold py-2 px-4 rounded"
               disabled={isSubmitting}
             >
-              Submit
+              Envoyer
             </button>
           </form>
         )}
@@ -269,7 +269,7 @@ export const Form: FunctionComponent<Props> = ({ user, currentUserRoles }) => {
             className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-sm text-red-400 font-bold py-2 px-4 rounded"
             onClick={handleDelete}
           >
-            Delete
+            Supprimer
           </button>
         )}
       </div>

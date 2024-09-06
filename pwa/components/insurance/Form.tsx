@@ -47,14 +47,14 @@ export const Form: FunctionComponent<Props> = ({ insurance }) => {
       router.push("/insurances");
     },
     onError: (error) => {
-      setError(`Error when deleting the resource: ${error}`);
+      setError(`Erreur lors de la suppression de l'assurance: ${error}`);
       console.error(error);
     },
   });
 
   const handleDelete = () => {
     if (!insurance || !insurance["@id"]) return;
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+    if (!window.confirm("Êtes vous sur de vouloir supprimer cet assurance ?")) return;
     deleteMutation.mutate({ id: insurance["@id"] });
   };
 
@@ -64,10 +64,10 @@ export const Form: FunctionComponent<Props> = ({ insurance }) => {
         href="/insurances"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
-        {`< Back to list`}
+        {`< Retour à la liste des assurances`}
       </Link>
       <h1 className="text-3xl my-2">
-        {insurance ? `Edit Insurance ${insurance["@id"]}` : `Create Insurance`}
+        {insurance ? `Modifier l'assurance ${insurance["name"]}` : `Créer une assurance`}
       </h1>
       <Formik
         initialValues={
@@ -90,7 +90,7 @@ export const Form: FunctionComponent<Props> = ({ insurance }) => {
               onSuccess: () => {
                 setStatus({
                   isValid: true,
-                  msg: `Element ${isCreation ? "created" : "updated"}.`,
+                  msg: `Assurance ${isCreation ? "créer" : "modifiée"}.`,
                 });
                 router.push("/insurances");
               },
@@ -126,7 +126,7 @@ export const Form: FunctionComponent<Props> = ({ insurance }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="insurance_name"
               >
-                name
+                Nom
               </label>
               <input
                 name="name"
@@ -152,7 +152,7 @@ export const Form: FunctionComponent<Props> = ({ insurance }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="insurance_price_ttc"
               >
-                price_ttc
+                Prix TTC
               </label>
               <input
                 name="price_ttc"
@@ -181,7 +181,7 @@ export const Form: FunctionComponent<Props> = ({ insurance }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="insurance_tva"
               >
-                tva
+                TVA
               </label>
               <input
                 name="tva"
@@ -220,7 +220,7 @@ export const Form: FunctionComponent<Props> = ({ insurance }) => {
               className="inline-block mt-2 bg-cyan-500 hover:bg-cyan-700 text-sm text-white font-bold py-2 px-4 rounded"
               disabled={isSubmitting}
             >
-              Submit
+              Envoyer
             </button>
           </form>
         )}
@@ -231,7 +231,7 @@ export const Form: FunctionComponent<Props> = ({ insurance }) => {
             className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-sm text-red-400 font-bold py-2 px-4 rounded"
             onClick={handleDelete}
           >
-            Delete
+            Supprimer
           </button>
         )}
       </div>

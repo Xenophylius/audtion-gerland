@@ -18,13 +18,13 @@ export const Show: FunctionComponent<Props> = ({ customer, text }) => {
 
   const handleDelete = async () => {
     if (!customer["@id"]) return;
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+    if (!window.confirm("Êtes vous sur de vouloir supprimer ce patient ?")) return;
 
     try {
       await fetch(customer["@id"], { method: "DELETE" });
       router.push("/customers");
     } catch (error) {
-      setError("Error when deleting the resource.");
+      setError("Erreur lors de la suppression du patient.");
       console.error(error);
     }
   };
@@ -32,7 +32,7 @@ export const Show: FunctionComponent<Props> = ({ customer, text }) => {
   return (
     <div className="p-4">
       <Head>
-        <title>{`Show Customer ${customer["@id"]}`}</title>
+        <title>{`Fiche de ${customer["firstname"] + " " + customer["lastname"]}`}</title>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: text }}
@@ -42,42 +42,42 @@ export const Show: FunctionComponent<Props> = ({ customer, text }) => {
         href="/customers"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
-        {"< Back to list"}
+        {"< Retour à la liste des patients"}
       </Link>
-      <h1 className="text-3xl mb-2">{`Show Customer ${customer["@id"]}`}</h1>
+      <h1 className="text-3xl mb-2">{`Fiche de ${customer["firstname"] + " " + customer["lastname"]}`}</h1>
       <table
         cellPadding={10}
         className="shadow-md table border-collapse min-w-full leading-normal table-auto text-left my-3"
       >
         <thead className="w-full text-xs uppercase font-light text-gray-700 bg-gray-200 py-2 px-4">
           <tr>
-            <th>Field</th>
-            <th>Value</th>
+            <th>Champ</th>
+            <th>Valeur</th>
           </tr>
         </thead>
         <tbody className="text-sm divide-y divide-gray-200">
           <tr>
-            <th scope="row">firstname</th>
+            <th scope="row">Prénom</th>
             <td>{customer["firstname"]}</td>
           </tr>
           <tr>
-            <th scope="row">lastname</th>
+            <th scope="row">Nom</th>
             <td>{customer["lastname"]}</td>
           </tr>
           <tr>
-            <th scope="row">birth</th>
+            <th scope="row">Date de naissance</th>
             <td>{customer["birth"]?.toLocaleString()}</td>
           </tr>
           <tr>
-            <th scope="row">sex</th>
+            <th scope="row">Sexe</th>
             <td>{customer["sex"]}</td>
           </tr>
           <tr>
-            <th scope="row">city</th>
+            <th scope="row">Ville</th>
             <td>{customer["city"]}</td>
           </tr>
           <tr>
-            <th scope="row">id_user</th>
+            <th scope="row">Audioprothésiste</th>
             <td>
               <ReferenceLinks
                 items={{
@@ -88,7 +88,7 @@ export const Show: FunctionComponent<Props> = ({ customer, text }) => {
             </td>
           </tr>
           <tr>
-            <th scope="row">id_center</th>
+            <th scope="row">Centre</th>
             <td>
               <ReferenceLinks
                 items={{
@@ -113,13 +113,13 @@ export const Show: FunctionComponent<Props> = ({ customer, text }) => {
           href={getItemPath(customer["@id"], "/customers/[id]/edit")}
           className="inline-block mt-2 border-2 border-cyan-500 bg-cyan-500 hover:border-cyan-700 hover:bg-cyan-700 text-xs text-white font-bold py-2 px-4 rounded"
         >
-          Edit
+          Modifier
         </Link>
         <button
           className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-xs text-red-400 font-bold py-2 px-4 rounded"
           onClick={handleDelete}
         >
-          Delete
+          Supprimer
         </button>
       </div>
     </div>

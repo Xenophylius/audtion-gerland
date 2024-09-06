@@ -47,14 +47,14 @@ export const Form: FunctionComponent<Props> = ({ device }) => {
       router.push("/devices");
     },
     onError: (error) => {
-      setError(`Error when deleting the resource: ${error}`);
+      setError(`Erreur lors de la suppression de l'équipement: ${error}`);
       console.error(error);
     },
   });
 
   const handleDelete = () => {
     if (!device || !device["@id"]) return;
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+    if (!window.confirm("Êtes vous sur de vouloir supprimer cet équipement ?")) return;
     deleteMutation.mutate({ id: device["@id"] });
   };
 
@@ -64,10 +64,10 @@ export const Form: FunctionComponent<Props> = ({ device }) => {
         href="/devices"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
-        {`< Back to list`}
+        {`< Retour à la liste des équipements`}
       </Link>
       <h1 className="text-3xl my-2">
-        {device ? `Edit Device ${device["@id"]}` : `Create Device`}
+        {device ? `Modifier l'équipement ${device["name"]}` : `Créer un équipement`}
       </h1>
       <Formik
         initialValues={
@@ -90,7 +90,7 @@ export const Form: FunctionComponent<Props> = ({ device }) => {
               onSuccess: () => {
                 setStatus({
                   isValid: true,
-                  msg: `Element ${isCreation ? "created" : "updated"}.`,
+                  msg: `Equipement ${isCreation ? "créé" : "modifié"}.`,
                 });
                 router.push("/devices");
               },
@@ -126,7 +126,7 @@ export const Form: FunctionComponent<Props> = ({ device }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="device_name"
               >
-                name
+                Nom
               </label>
               <input
                 name="name"
@@ -152,7 +152,7 @@ export const Form: FunctionComponent<Props> = ({ device }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="device_company"
               >
-                company
+                Constructeur
               </label>
               <input
                 name="company"
@@ -180,7 +180,7 @@ export const Form: FunctionComponent<Props> = ({ device }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="device_tva"
               >
-                tva
+                TVA
               </label>
               <input
                 name="tva"
@@ -207,7 +207,7 @@ export const Form: FunctionComponent<Props> = ({ device }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="device_price_ttc"
               >
-                price_ttc
+                Prix TTC
               </label>
               <input
                 name="price_ttc"
@@ -250,7 +250,7 @@ export const Form: FunctionComponent<Props> = ({ device }) => {
               className="inline-block mt-2 bg-cyan-500 hover:bg-cyan-700 text-sm text-white font-bold py-2 px-4 rounded"
               disabled={isSubmitting}
             >
-              Submit
+              Envoyer
             </button>
           </form>
         )}
@@ -261,7 +261,7 @@ export const Form: FunctionComponent<Props> = ({ device }) => {
             className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-sm text-red-400 font-bold py-2 px-4 rounded"
             onClick={handleDelete}
           >
-            Delete
+            Supprimer
           </button>
         )}
       </div>

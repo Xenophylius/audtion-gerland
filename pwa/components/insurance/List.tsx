@@ -12,12 +12,12 @@ interface Props {
 export const List: FunctionComponent<Props> = ({ insurances }) => (
   <div className="p-4">
     <div className="flex justify-between items-center">
-      <h1 className="text-3xl mb-2">Insurance List</h1>
+      <h1 className="text-3xl mb-2">Liste des assurances</h1>
       <Link
         href="/insurances/create"
         className="bg-cyan-500 hover:bg-cyan-700 text-white text-sm font-bold py-2 px-4 rounded"
       >
-        Create
+        Ajouter une assurance
       </Link>
     </div>
     <table
@@ -27,9 +27,9 @@ export const List: FunctionComponent<Props> = ({ insurances }) => (
       <thead className="w-full text-xs uppercase font-light text-gray-700 bg-gray-200 py-2 px-4">
         <tr>
           <th>id</th>
-          <th>name</th>
-          <th>price_ttc</th>
-          <th>tva</th>
+          <th>Nom</th>
+          <th>Prix TTC</th>
+          <th>TVA</th>
           <th colSpan={2} />
         </tr>
       </thead>
@@ -56,7 +56,7 @@ export const List: FunctionComponent<Props> = ({ insurances }) => (
                       href={getItemPath(insurance["@id"], "/insurances/[id]")}
                       className="text-cyan-500"
                     >
-                      Show
+                      Voir
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -80,7 +80,7 @@ export const List: FunctionComponent<Props> = ({ insurances }) => (
                       )}
                       className="text-cyan-500"
                     >
-                      Edit
+                      Modifier
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"

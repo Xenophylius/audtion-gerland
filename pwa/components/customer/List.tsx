@@ -17,7 +17,7 @@ export const List: FunctionComponent<Props> = ({ customers }) => (
         href="/customers/create"
         className="bg-cyan-500 hover:bg-cyan-700 text-white text-sm font-bold py-2 px-4 rounded"
       >
-        Create
+        Créer un patient
       </Link>
     </div>
     <table
@@ -27,13 +27,13 @@ export const List: FunctionComponent<Props> = ({ customers }) => (
       <thead className="w-full text-xs uppercase font-light text-gray-700 bg-gray-200 py-2 px-4">
         <tr>
           <th>id</th>
-          <th>firstname</th>
-          <th>lastname</th>
-          <th>birth</th>
-          <th>sex</th>
-          <th>city</th>
-          <th>id_user</th>
-          <th>id_center</th>
+          <th>Prénom</th>
+          <th>Nom</th>
+          <th>Date de naissance</th>
+          <th>Sexe</th>
+          <th>Ville</th>
+          <th>Audioprothésiste</th>
+          <th>Centre</th>
           <th colSpan={2} />
         </tr>
       </thead>
@@ -83,7 +83,7 @@ export const List: FunctionComponent<Props> = ({ customers }) => (
                       href={getItemPath(customer["@id"], "/customers/[id]")}
                       className="text-cyan-500"
                     >
-                      Show
+                      Voir
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -107,7 +107,7 @@ export const List: FunctionComponent<Props> = ({ customers }) => (
                       )}
                       className="text-cyan-500"
                     >
-                      Edit
+                      Modifier
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"

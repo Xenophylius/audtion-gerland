@@ -33,7 +33,7 @@ export const PageList: NextComponentType<NextPageContext> = () => {
     <div>
       <div>
         <Head>
-          <title>Insurance List</title>
+          <title>Liste des assurances</title>
         </Head>
       </div>
       <List insurances={collection["hydra:member"]} />

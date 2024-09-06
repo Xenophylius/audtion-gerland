@@ -12,12 +12,12 @@ interface Props {
 export const List: FunctionComponent<Props> = ({ paiements }) => (
   <div className="p-4">
     <div className="flex justify-between items-center">
-      <h1 className="text-3xl mb-2">Paiement List</h1>
+      <h1 className="text-3xl mb-2">Liste des paiements</h1>
       <Link
         href="/paiements/create"
         className="bg-cyan-500 hover:bg-cyan-700 text-white text-sm font-bold py-2 px-4 rounded"
       >
-        Create
+        Ajouter un paiement
       </Link>
     </div>
     <table
@@ -30,7 +30,7 @@ export const List: FunctionComponent<Props> = ({ paiements }) => (
           <th>RAC</th>
           <th>RO</th>
           <th>RC</th>
-          <th>credit</th>
+          <th>Credit</th>
           <th colSpan={2} />
         </tr>
       </thead>
@@ -58,7 +58,7 @@ export const List: FunctionComponent<Props> = ({ paiements }) => (
                       href={getItemPath(paiement["@id"], "/paiements/[id]")}
                       className="text-cyan-500"
                     >
-                      Show
+                      Voir
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -82,7 +82,7 @@ export const List: FunctionComponent<Props> = ({ paiements }) => (
                       )}
                       className="text-cyan-500"
                     >
-                      Edit
+                      Modifier
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"

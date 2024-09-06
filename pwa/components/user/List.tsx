@@ -12,12 +12,12 @@ interface Props {
 export const List: FunctionComponent<Props> = ({ users }) => (
   <div className="p-4">
     <div className="flex justify-between items-center">
-      <h1 className="text-3xl mb-2">User List</h1>
+      <h1 className="text-3xl mb-2">Liste des utilisateurs</h1>
       <Link
         href="/users/create"
         className="bg-cyan-500 hover:bg-cyan-700 text-white text-sm font-bold py-2 px-4 rounded"
       >
-        Create
+        Ajouter un utilisateur
       </Link>
     </div>
     <table
@@ -27,12 +27,11 @@ export const List: FunctionComponent<Props> = ({ users }) => (
       <thead className="w-full text-xs uppercase font-light text-gray-700 bg-gray-200 py-2 px-4">
         <tr>
           <th>id</th>
-          <th>email</th>
-          <th>roles</th>
+          <th>Mail</th>
+          <th>Role</th>
           <th>password</th>
-          <th>firstname</th>
-          <th>lastname</th>
-          <th>userIdentifier</th>
+          <th>Prénom</th>
+          <th>Nom</th>
           <th colSpan={2} />
         </tr>
       </thead>
@@ -56,13 +55,12 @@ export const List: FunctionComponent<Props> = ({ users }) => (
                   <td>{user["password"]}</td>
                   <td>{user["firstname"]}</td>
                   <td>{user["lastname"]}</td>
-                  <td>{user["userIdentifier"]}</td>
                   <td className="w-8">
                     <Link
                       href={getItemPath(user["@id"], "/users/[id]")}
                       className="text-cyan-500"
                     >
-                      Show
+                      Voir
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -83,7 +81,7 @@ export const List: FunctionComponent<Props> = ({ users }) => (
                       href={getItemPath(user["@id"], "/users/[id]/edit")}
                       className="text-cyan-500"
                     >
-                      Edit
+                      Modifier
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"

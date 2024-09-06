@@ -1,11 +1,15 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ErrorMessage, Formik } from "formik";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 
 import { fetch, FetchError, FetchResponse } from "../../utils/dataAccess";
 import { Customer } from "../../types/Customer";
+import { getAllCenters } from "../../services/center";
+import { Center } from "../../types/Center";
+import { getAllUsers } from "../../services/user"; // Import de la fonction pour récupérer les utilisateurs
+import { User } from "../../types/User"; // Import du type User
 
 interface Props {
   customer?: Customer;
@@ -32,6 +36,22 @@ export const Form: FunctionComponent<Props> = ({ customer }) => {
   const [, setError] = useState<string | null>(null);
   const router = useRouter();
 
+  const [centers, setCenters] = useState<Center[]>([]);
+
+  useEffect(() => {
+    const fetchCenters = async () => {
+      const allCenters = await getAllCenters();
+      setCenters(allCenters);
+    };
+
+    fetchCenters();
+  }, []);
+
+  const { data: users, isLoading: isLoadingUsers } = useQuery(
+    "users",
+    getAllUsers
+  );
+
   const saveMutation = useMutation<
     FetchResponse<Customer> | undefined,
     Error | FetchError,
@@ -47,14 +67,14 @@ export const Form: FunctionComponent<Props> = ({ customer }) => {
       router.push("/customers");
     },
     onError: (error) => {
-      setError(`Error when deleting the resource: ${error}`);
+      setError(`Erreur lors de la suppression du patient: ${error}`);
       console.error(error);
     },
   });
 
   const handleDelete = () => {
     if (!customer || !customer["@id"]) return;
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+    if (!window.confirm("Êtes vous sur de vouloir supprimer ce patient ?")) return;
     deleteMutation.mutate({ id: customer["@id"] });
   };
 
@@ -64,10 +84,10 @@ export const Form: FunctionComponent<Props> = ({ customer }) => {
         href="/customers"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
-        {`< Back to list`}
+        {`< Retour à la liste des patients`}
       </Link>
       <h1 className="text-3xl my-2">
-        {customer ? `Edit Customer ${customer["@id"]}` : `Create Customer`}
+        {customer ? `Modifier patient ${customer["@id"]}` : `Créer patient`}
       </h1>
       <Formik
         initialValues={
@@ -90,7 +110,7 @@ export const Form: FunctionComponent<Props> = ({ customer }) => {
               onSuccess: () => {
                 setStatus({
                   isValid: true,
-                  msg: `Element ${isCreation ? "created" : "updated"}.`,
+                  msg: `Patient ${isCreation ? "créé" : "modifié"}.`,
                 });
                 router.push("/customers");
               },
@@ -126,7 +146,7 @@ export const Form: FunctionComponent<Props> = ({ customer }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="customer_firstname"
               >
-                firstname
+                Prénom
               </label>
               <input
                 name="firstname"
@@ -154,7 +174,7 @@ export const Form: FunctionComponent<Props> = ({ customer }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="customer_lastname"
               >
-                lastname
+                Nom
               </label>
               <input
                 name="lastname"
@@ -182,13 +202,13 @@ export const Form: FunctionComponent<Props> = ({ customer }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="customer_birth"
               >
-                birth
+                Date de naissance
               </label>
               <input
                 name="birth"
                 id="customer_birth"
                 value={values.birth?.toLocaleString() ?? ""}
-                type="dateTime"
+                type="date"
                 placeholder=""
                 className={`mt-1 block w-full ${
                   errors.birth && touched.birth ? "border-red-500" : ""
@@ -206,37 +226,58 @@ export const Form: FunctionComponent<Props> = ({ customer }) => {
               />
             </div>
             <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="customer_sex"
-              >
-                sex
-              </label>
-              <input
-                name="sex"
-                id="customer_sex"
-                value={values.sex ?? ""}
-                type="text"
-                placeholder=""
-                className={`mt-1 block w-full ${
-                  errors.sex && touched.sex ? "border-red-500" : ""
-                }`}
-                aria-invalid={errors.sex && touched.sex ? "true" : undefined}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
+              <label className="text-gray-700 block text-sm font-bold">Sexe</label>
+              <div className="flex items-center space-x-4 mt-1">
+                <label className="inline-flex items-center">
+                  <input
+                    type="radio"
+                    name="sex"
+                    value="Homme"
+                    checked={values.sex === "Homme"}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className="form-radio text-cyan-600"
+                  />
+                  <span className="ml-2">Homme</span>
+                </label>
+                <label className="inline-flex items-center">
+                  <input
+                    type="radio"
+                    name="sex"
+                    value="Femme"
+                    checked={values.sex === "Femme"}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className="form-radio text-cyan-600"
+                  />
+                  <span className="ml-2">Femme</span>
+                </label>
+                <label className="inline-flex items-center">
+                  <input
+                    type="radio"
+                    name="sex"
+                    value="Ne se prononce pas"
+                    checked={values.sex === "Ne se prononce pas"}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className="form-radio text-cyan-600"
+                  />
+                  <span className="ml-2">Ne se prononce pas</span>
+                </label>
+              </div>
               <ErrorMessage
                 className="text-xs text-red-500 pt-1"
                 component="div"
                 name="sex"
               />
             </div>
+
             <div className="mb-2">
               <label
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="customer_city"
               >
-                city
+                Ville
               </label>
               <input
                 name="city"
@@ -262,23 +303,26 @@ export const Form: FunctionComponent<Props> = ({ customer }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="customer_id_user"
               >
-                id_user
+                Audioprothésiste
               </label>
-              <input
-                name="id_user"
+              <select
+                name="id_user" // Remplacez id_name_audio par id_user
                 id="customer_id_user"
                 value={values.id_user ?? ""}
-                type="text"
-                placeholder=""
                 className={`mt-1 block w-full ${
                   errors.id_user && touched.id_user ? "border-red-500" : ""
                 }`}
-                aria-invalid={
-                  errors.id_user && touched.id_user ? "true" : undefined
-                }
+                aria-invalid={errors.id_user && touched.id_user ? "true" : undefined}
                 onChange={handleChange}
                 onBlur={handleBlur}
-              />
+              >
+                <option value="">Sélectionnez un Audioprothésiste</option>
+                {users?.map((user) => (
+                  <option key={user["@id"]} value={user["@id"]}>
+                    {user.firstname}
+                  </option>
+                ))}
+              </select>
               <ErrorMessage
                 className="text-xs text-red-500 pt-1"
                 component="div"
@@ -290,85 +334,33 @@ export const Form: FunctionComponent<Props> = ({ customer }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="customer_id_center"
               >
-                id_center
+                Centre
               </label>
-              <input
-                name="id_center"
+              <select
+                name="id_center" // Remplacez id_center_pec par id_center
                 id="customer_id_center"
                 value={values.id_center ?? ""}
-                type="text"
-                placeholder=""
                 className={`mt-1 block w-full ${
                   errors.id_center && touched.id_center ? "border-red-500" : ""
                 }`}
-                aria-invalid={
-                  errors.id_center && touched.id_center ? "true" : undefined
-                }
+                aria-invalid={errors.id_center && touched.id_center ? "true" : undefined}
                 onChange={handleChange}
                 onBlur={handleBlur}
-              />
+              >
+                <option value="">Sélectionnez un centre</option>
+                {centers.map((center) => (
+                  <option key={center["@id"]} value={center["@id"]}>
+                    {center.name}
+                  </option>
+                ))}
+              </select>
               <ErrorMessage
                 className="text-xs text-red-500 pt-1"
                 component="div"
                 name="id_center"
               />
             </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="customer_idUser"
-              >
-                idUser
-              </label>
-              <input
-                name="idUser"
-                id="customer_idUser"
-                value={values.idUser ?? ""}
-                type="text"
-                placeholder=""
-                className={`mt-1 block w-full ${
-                  errors.idUser && touched.idUser ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.idUser && touched.idUser ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="idUser"
-              />
-            </div>
-            <div className="mb-2">
-              <label
-                className="text-gray-700 block text-sm font-bold"
-                htmlFor="customer_idCenter"
-              >
-                idCenter
-              </label>
-              <input
-                name="idCenter"
-                id="customer_idCenter"
-                value={values.idCenter ?? ""}
-                type="text"
-                placeholder=""
-                className={`mt-1 block w-full ${
-                  errors.idCenter && touched.idCenter ? "border-red-500" : ""
-                }`}
-                aria-invalid={
-                  errors.idCenter && touched.idCenter ? "true" : undefined
-                }
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <ErrorMessage
-                className="text-xs text-red-500 pt-1"
-                component="div"
-                name="idCenter"
-              />
-            </div>
+
             {status && status.msg && (
               <div
                 className={`border px-4 py-3 my-4 rounded ${
@@ -386,7 +378,7 @@ export const Form: FunctionComponent<Props> = ({ customer }) => {
               className="inline-block mt-2 bg-cyan-500 hover:bg-cyan-700 text-sm text-white font-bold py-2 px-4 rounded"
               disabled={isSubmitting}
             >
-              Submit
+              Envoyer
             </button>
           </form>
         )}
@@ -397,7 +389,7 @@ export const Form: FunctionComponent<Props> = ({ customer }) => {
             className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-sm text-red-400 font-bold py-2 px-4 rounded"
             onClick={handleDelete}
           >
-            Delete
+            Supprimer
           </button>
         )}
       </div>

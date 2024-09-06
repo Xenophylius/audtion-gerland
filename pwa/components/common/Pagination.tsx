@@ -31,7 +31,7 @@ const Pagination = ({ collection, getPagePath }: Props) => {
           }`}
           aria-label="First page"
         >
-          <span aria-hidden="true">&lArr;</span> First
+          <span aria-hidden="true">&lArr;</span> Premier
         </Link>
         <Link
           href={previous ? getPagePath(previous) : "#"}
@@ -40,7 +40,7 @@ const Pagination = ({ collection, getPagePath }: Props) => {
           }`}
           aria-label="Previous page"
         >
-          <span aria-hidden="true">&larr;</span> Previous
+          <span aria-hidden="true">&larr;</span> Précédent
         </Link>
         <Link
           href={next ? getPagePath(next) : "#"}
@@ -49,7 +49,7 @@ const Pagination = ({ collection, getPagePath }: Props) => {
           }`}
           aria-label="Next page"
         >
-          Next <span aria-hidden="true">&rarr;</span>
+          Suivant <span aria-hidden="true">&rarr;</span>
         </Link>
         <Link
           href={last ? getPagePath(last) : "#"}
@@ -58,7 +58,7 @@ const Pagination = ({ collection, getPagePath }: Props) => {
           }`}
           aria-label="Last page"
         >
-          Last <span aria-hidden="true">&rArr;</span>
+          Dernier <span aria-hidden="true">&rArr;</span>
         </Link>
       </nav>
     </div>

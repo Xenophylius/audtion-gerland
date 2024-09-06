@@ -47,14 +47,14 @@ export const Form: FunctionComponent<Props> = ({ paiement }) => {
       router.push("/paiements");
     },
     onError: (error) => {
-      setError(`Error when deleting the resource: ${error}`);
+      setError(`Erreur lors de la suppression du paiement: ${error}`);
       console.error(error);
     },
   });
 
   const handleDelete = () => {
     if (!paiement || !paiement["@id"]) return;
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+    if (!window.confirm("Êtes vous sur de vouloir supprimer ce paiement ?")) return;
     deleteMutation.mutate({ id: paiement["@id"] });
   };
 
@@ -64,10 +64,10 @@ export const Form: FunctionComponent<Props> = ({ paiement }) => {
         href="/paiements"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
-        {`< Back to list`}
+        {`< Retour à la liste des paiements`}
       </Link>
       <h1 className="text-3xl my-2">
-        {paiement ? `Edit Paiement ${paiement["@id"]}` : `Create Paiement`}
+        {paiement ? `Modifier le paiement ${paiement["@id"]}` : `Ajouter un paiement`}
       </h1>
       <Formik
         initialValues={
@@ -90,7 +90,7 @@ export const Form: FunctionComponent<Props> = ({ paiement }) => {
               onSuccess: () => {
                 setStatus({
                   isValid: true,
-                  msg: `Element ${isCreation ? "created" : "updated"}.`,
+                  msg: `Paiement ${isCreation ? "créé" : "modifié"}.`,
                 });
                 router.push("/paiements");
               },
@@ -207,7 +207,7 @@ export const Form: FunctionComponent<Props> = ({ paiement }) => {
                 className="text-gray-700 block text-sm font-bold"
                 htmlFor="paiement_credit"
               >
-                credit
+                Credit
               </label>
               <input
                 name="credit"
@@ -248,7 +248,7 @@ export const Form: FunctionComponent<Props> = ({ paiement }) => {
               className="inline-block mt-2 bg-cyan-500 hover:bg-cyan-700 text-sm text-white font-bold py-2 px-4 rounded"
               disabled={isSubmitting}
             >
-              Submit
+              Envoyer
             </button>
           </form>
         )}
@@ -259,7 +259,7 @@ export const Form: FunctionComponent<Props> = ({ paiement }) => {
             className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-sm text-red-400 font-bold py-2 px-4 rounded"
             onClick={handleDelete}
           >
-            Delete
+            Supprimer
           </button>
         )}
       </div>

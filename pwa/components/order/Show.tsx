@@ -18,13 +18,13 @@ export const Show: FunctionComponent<Props> = ({ order, text }) => {
 
   const handleDelete = async () => {
     if (!order["@id"]) return;
-    if (!window.confirm("Are you sure you want to delete this item?")) return;
+    if (!window.confirm("Êtes vous sur de vouloir supprimer la vente ?")) return;
 
     try {
       await fetch(order["@id"], { method: "DELETE" });
       router.push("/orders");
     } catch (error) {
-      setError("Error when deleting the resource.");
+      setError("Erreur lors de la suppression de la vente.");
       console.error(error);
     }
   };
@@ -32,7 +32,7 @@ export const Show: FunctionComponent<Props> = ({ order, text }) => {
   return (
     <div className="p-4">
       <Head>
-        <title>{`Show Order ${order["@id"]}`}</title>
+        <title>{`Fiche de ${order["id_customer"]["firstname"] + " " + order["id_customer"]["lastname"]}`}</title>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: text }}
@@ -42,22 +42,22 @@ export const Show: FunctionComponent<Props> = ({ order, text }) => {
         href="/orders"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
-        {"< Back to list"}
+        {"< Retour à la liste des ventes"}
       </Link>
-      <h1 className="text-3xl mb-2">{`Show Order ${order["@id"]}`}</h1>
+      <h1 className="text-3xl mb-2">{`Fiche de ${order["id_customer"]["firstname"] + " " + order["id_customer"]["lastname"]}`}</h1>
       <table
         cellPadding={10}
         className="shadow-md table border-collapse min-w-full leading-normal table-auto text-left my-3"
       >
         <thead className="w-full text-xs uppercase font-light text-gray-700 bg-gray-200 py-2 px-4">
           <tr>
-            <th>Field</th>
-            <th>Value</th>
+            <th>Champ</th>
+            <th>Valeur</th>
           </tr>
         </thead>
         <tbody className="text-sm divide-y divide-gray-200">
           <tr>
-            <th scope="row">id_paiement</th>
+            <th scope="row">Paiement</th>
             <td>
               <ReferenceLinks
                 items={{
@@ -71,7 +71,7 @@ export const Show: FunctionComponent<Props> = ({ order, text }) => {
             </td>
           </tr>
           <tr>
-            <th scope="row">id_customer</th>
+            <th scope="row">Patient</th>
             <td>
               <ReferenceLinks
                 items={{
@@ -85,11 +85,11 @@ export const Show: FunctionComponent<Props> = ({ order, text }) => {
             </td>
           </tr>
           <tr>
-            <th scope="row">mutual</th>
+            <th scope="row">Mutuelle</th>
             <td>{order["mutual"]}</td>
           </tr>
           <tr>
-            <th scope="row">id_name_audio</th>
+            <th scope="row">Audioprothésiste</th>
             <td>
               <ReferenceLinks
                 items={{
@@ -97,13 +97,13 @@ export const Show: FunctionComponent<Props> = ({ order, text }) => {
                     order["id_name_audio"]["@id"],
                     "/users/[id]"
                   ),
-                  name: order["id_name_audio"]["@id"],
+                  name: order["id_name_audio"]["firstname"],
                 }}
               />
             </td>
           </tr>
           <tr>
-            <th scope="row">id_insurance</th>
+            <th scope="row">Assurance</th>
             <td>
               <ReferenceLinks
                 items={{
@@ -111,13 +111,13 @@ export const Show: FunctionComponent<Props> = ({ order, text }) => {
                     order["id_insurance"]["@id"],
                     "/insurances/[id]"
                   ),
-                  name: order["id_insurance"]["@id"],
+                  name: order["id_insurance"]["name"],
                 }}
               />
             </td>
           </tr>
           <tr>
-            <th scope="row">id_center_pec</th>
+            <th scope="row">Centre de PEC</th>
             <td>
               <ReferenceLinks
                 items={{
@@ -125,7 +125,7 @@ export const Show: FunctionComponent<Props> = ({ order, text }) => {
                     order["id_center_pec"]["@id"],
                     "/centers/[id]"
                   ),
-                  name: order["id_center_pec"]["@id"],
+                  name: order["id_center_pec"]["name"],
                 }}
               />
             </td>
@@ -145,13 +145,13 @@ export const Show: FunctionComponent<Props> = ({ order, text }) => {
           href={getItemPath(order["@id"], "/orders/[id]/edit")}
           className="inline-block mt-2 border-2 border-cyan-500 bg-cyan-500 hover:border-cyan-700 hover:bg-cyan-700 text-xs text-white font-bold py-2 px-4 rounded"
         >
-          Edit
+          Modifier
         </Link>
         <button
           className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-xs text-red-400 font-bold py-2 px-4 rounded"
           onClick={handleDelete}
         >
-          Delete
+          Supprimer
         </button>
       </div>
     </div>

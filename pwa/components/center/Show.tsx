@@ -24,7 +24,7 @@ export const Show: FunctionComponent<Props> = ({ center, text }) => {
       await fetch(center["@id"], { method: "DELETE" });
       router.push("/centers");
     } catch (error) {
-      setError("Error when deleting the resource.");
+      setError("Erreur lors de la suppression du centre.");
       console.error(error);
     }
   };
@@ -32,7 +32,7 @@ export const Show: FunctionComponent<Props> = ({ center, text }) => {
   return (
     <div className="p-4">
       <Head>
-        <title>{`Show Center ${center["@id"]}`}</title>
+        <title>{`Fiche du centre ${center["name"]}`}</title>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: text }}
@@ -42,50 +42,43 @@ export const Show: FunctionComponent<Props> = ({ center, text }) => {
         href="/centers"
         className="text-sm text-cyan-500 font-bold hover:text-cyan-700"
       >
-        {"< Back to list"}
+        {"< Retour à la liste des centres"}
       </Link>
-      <h1 className="text-3xl mb-2">{`Show Center ${center["@id"]}`}</h1>
+      <h1 className="text-3xl mb-2">{`Fiche du centre ${center["name"]}`}</h1>
       <table
         cellPadding={10}
         className="shadow-md table border-collapse min-w-full leading-normal table-auto text-left my-3"
       >
         <thead className="w-full text-xs uppercase font-light text-gray-700 bg-gray-200 py-2 px-4">
           <tr>
-            <th>Field</th>
-            <th>Value</th>
+            <th>Champ</th>
+            <th>Valeur</th>
           </tr>
         </thead>
         <tbody className="text-sm divide-y divide-gray-200">
           <tr>
-            <th scope="row">name</th>
+            <th scope="row">Nom</th>
             <td>{center["name"]}</td>
           </tr>
           <tr>
-            <th scope="row">address</th>
+            <th scope="row">Adresse</th>
             <td>{center["address"]}</td>
           </tr>
           <tr>
-            <th scope="row">city</th>
+            <th scope="row">Ville</th>
             <td>{center["city"]}</td>
           </tr>
           <tr>
-            <th scope="row">postal_code</th>
+            <th scope="row">Code postal</th>
             <td>{center["postal_code"]}</td>
           </tr>
           <tr>
-            <th scope="row">phone</th>
+            <th scope="row">Téléphone</th>
             <td>{center["phone"]}</td>
           </tr>
           <tr>
-            <th scope="row">mail</th>
+            <th scope="row">Mail</th>
             <td>{center["mail"]}</td>
-          </tr>
-          <tr>
-            <th scope="row">customers</th>
-          </tr>
-          <tr>
-            <th scope="row">postalCode</th>
-            <td>{center["postalCode"]}</td>
           </tr>
         </tbody>
       </table>
@@ -102,13 +95,13 @@ export const Show: FunctionComponent<Props> = ({ center, text }) => {
           href={getItemPath(center["@id"], "/centers/[id]/edit")}
           className="inline-block mt-2 border-2 border-cyan-500 bg-cyan-500 hover:border-cyan-700 hover:bg-cyan-700 text-xs text-white font-bold py-2 px-4 rounded"
         >
-          Edit
+          Modifier
         </Link>
         <button
           className="inline-block mt-2 border-2 border-red-400 hover:border-red-700 hover:text-red-700 text-xs text-red-400 font-bold py-2 px-4 rounded"
           onClick={handleDelete}
         >
-          Delete
+          Supprimer
         </button>
       </div>
     </div>
